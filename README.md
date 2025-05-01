@@ -28,6 +28,37 @@ The ultimate goal is to simplify integration across domains, support AI-first dy
 
 ## 📦 Usage Journey
 
+The process works as follows:
+
+1. The client sends a **ContractMessage** describing the needed data resources.
+2. The server replies with a **ContractAcknowledgement** if the contract is valid and accepted.
+3. The client then sends a **DataRequest** using the contract-defined structure.
+4. The server responds with a **DataResponse** containing the requested data.
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant AuthService
+  participant DCPCore
+  participant Kubernetes
+  participant TestRunner
+
+  Client->>AuthService: Authenticate (Get JWT)
+  AuthService->>Client: Return JWT
+  Client->>DCPCore: Submit ContractMessage with JWT
+  DCPCore->>AuthService: Validate JWT
+  AuthService->>DCPCore: Return validation result
+  DCPCore->>Kubernetes: Deploy service for client
+  Kubernetes-->>DCPCore: Deployment status
+  DCPCore->>TestRunner: Execute tests
+  TestRunner-->>DCPCore: Return test results
+  DCPCore->>Client: Return ContractAcknowledgement
+  Client->>DCPCore: Submit DataRequest
+  DCPCore->>Kubernetes: Route request
+  Kubernetes-->>DCPCore: Return filtered data
+  DCPCore->>Client: Return DataResponse
+```
+
 ### 1. ContractMessage (Request)
 ```json
 {
@@ -110,37 +141,125 @@ The ultimate goal is to simplify integration across domains, support AI-first dy
 
 ---
 
-## 🧭 User Journey Diagram
+## 📄 ContractMessage Schema & Discoverability
 
-```mermaid
-sequenceDiagram
-  participant Client
-  participant AuthService
-  participant DCP Gateway
-  participant AI Engine
-  participant Server
+To ensure clients can validate and construct `ContractMessage` payloads programmatically, DCP provides a machine-readable schema and a standardized discovery endpoint.
 
-  Client->>AuthService: Request JWT
-  AuthService-->>Client: Return JWT
+### JSON Schema Definition
 
-  Client->>DCP Gateway: Submit ContractMessage with JWT
-  DCP Gateway->>AI Engine: Validate & Generate API
-  AI Engine-->>DCP Gateway: Return ContractAcknowledgement
+Clients should validate contracts against the official schema to ensure compatibility:
 
-  Client->>DCP Gateway: Send DataRequest
-  DCP Gateway->>Server: Fetch data
-  Server-->>DCP Gateway: Return filtered data
-  DCP Gateway-->>Client: Return DataResponse
+```json
+"$schema": "https://dcp.example.com/schemas/contract.schema.json"
 ```
 
-The process works as follows:
+> The full schema is available via `/dcp/.well-known/discovery`.
 
-1. The client sends a **ContractMessage** describing the needed data resources.
-2. The server replies with a **ContractAcknowledgement** if the contract is valid and accepted.
-3. The client then sends a **DataRequest** using the contract-defined structure.
-4. The server responds with a **DataResponse** containing the requested data.
+#### Example ContractMessage Schema Snippet
 
-This interaction ensures that data access is declarative, validated, and governed by secure and dynamic contracts.
+```json
+{
+  "title": "ContractMessage",
+  "type": "object",
+  "required": ["type", "protocol_version", "contract"],
+  "properties": {
+    "type": { "const": "ContractMessage" },
+    "protocol_version": { "type": "string" },
+    "contract": {
+      "$ref": "#/definitions/Contract"
+    }
+  },
+  "definitions": {
+    "Contract": {
+      "type": "object",
+      "required": ["resources", "response_formats"],
+      "properties": {
+        "resources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Resource" }
+        },
+        "response_formats": {
+          "type": "array",
+          "items": { "enum": ["json", "protobuf"] }
+        },
+        "region": { "type": "string" },
+        "storage_config": { "type": "object" }
+      }
+    },
+    "Resource": {
+      "type": "object",
+      "required": ["name", "operations", "fields"],
+      "properties": {
+        "name": { "type": "string" },
+        "operations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "filters": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### Contract Discovery Endpoint
+
+The following endpoint exposes schema definitions and reusable policy examples:
+
+- **Endpoint**: `GET /dcp/.well-known/discovery`
+- **Response**:
+
+```json
+{
+  "schemas": {
+    "ContractMessage": "/schemas/contract.schema.json",
+    "DataRequest": "/schemas/data-request.schema.json"
+  },
+  "opa_examples": [
+    {
+      "name": "read_only",
+      "source": "package dcp.access\nallow {\n  input.method == \"GET\"\n}"
+    },
+    {
+      "name": "admin_crud",
+      "source": "package dcp.admin\nallow {\n  input.role == \"admin\"\n}"
+    }
+  ]
+}
+```
+
+This endpoint enables clients to bootstrap their contract payloads with confidence.
+
+---
+
+### Policy Submission in Contracts
+
+Policies can be optionally submitted with the contract. These policies are validated during contract processing:
+
+```json
+{
+  "contract": {
+    "resources": [...],
+    "policies": [
+      {
+        "name": "read_only_policy",
+        "source": "package dcp.read\n allow { input.method == \"GET\" }"
+      }
+    ]
+  }
+}
+```
+
+Policies are validated by the Policy Engine and must be scoped to the client namespace.
 
 ---
 
