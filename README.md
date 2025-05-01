@@ -150,8 +150,9 @@ To ensure clients can validate and construct `ContractMessage` payloads programm
 Clients should validate contracts against the official schema to ensure compatibility:
 
 ```json
-"$schema": "https://dcp.example.com/schemas/contract.schema.json"
+"$schema": "https://raw.githubusercontent.com/gokayokutucu/dcp-spec/refs/heads/main/schemas/contract.schema.json"
 ```
+> This URL points to the latest raw schema definition hosted in the GitHub repository. It can be used in `$schema` to enable IDE validation and tooling support.
 
 > The full schema is available via `/dcp/.well-known/discovery`.
 
