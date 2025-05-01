@@ -1,0 +1,67 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env*
+*.venv/
+venv/
+pip-log.txt
+
+# JetBrains IDEs (IntelliJ, PyCharm, etc.)
+/.idea/
+
+# VSCode
+/.vscode/
+
+# Logs
+*.log
+logs/
+*.pid
+
+# Compiled files
+*.class
+*.o
+*.so
+*.dll
+*.exe
+*.out
+*.obj
+
+# Build artifacts
+dist/
+build/
+target/
+coverage/
+htmlcov/
+
+# Test results
+.cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.mo
+*.pot
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Others
+*.swp
+*.swo
+*.bak
+*.tmp
+/.idea/
