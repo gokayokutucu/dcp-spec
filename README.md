@@ -112,8 +112,6 @@ The ultimate goal is to simplify integration across domains, support AI-first dy
 
 ## 🧭 User Journey Diagram
 
-Below is the typical contract-driven interaction flow between client and server:
-
 ```mermaid
 sequenceDiagram
   participant Client
