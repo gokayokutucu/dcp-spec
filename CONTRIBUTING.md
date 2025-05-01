@@ -48,8 +48,15 @@ We are building the following components under the `impl/` directory:
 - `dcp-validator`: A reusable validation core
 - `dcp-ui`: Optional browser-based visual editor and tester (planned)
 - `qwen-finetune`: Experiments on fine-tuning Qwen with contract patterns
+- `policy-engine`: A component for loading and evaluating Rego-based authorization policies. Contributors can define new policies or test existing ones. Use the `/policies/validate` endpoint or local test harness to verify changes.
 
 Please watch this repository for updates. We will mark issues accordingly when components are open to contributions.
+
+#### 🔐 Policy Engine
+
+- Rego-based policies are located under the `policies/` directory.
+- Contributors can add new access control policies or enhance existing ones.
+- Test your policies using the `POST /policies/validate` endpoint or local tooling such as OPA CLI.
 
 #### 🧪 Automated Tests
 
