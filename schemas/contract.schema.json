@@ -1,3 +1,28 @@
 {
-
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Contract",
+  "type": "object",
+  "required": ["resources", "response_formats"],
+  "properties": {
+    "resources": {
+      "type": "array",
+      "items": { "$ref": "./resource.schema.json" }
+    },
+    "response_formats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["json", "protobuf"]
+      }
+    },
+    "region": {
+      "type": "string"
+    },
+    "storage_config": {
+      "type": "object"
+    },
+    "cdn_config": {
+      "type": "object"
+    }
+  }
 }
