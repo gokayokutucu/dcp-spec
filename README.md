@@ -248,7 +248,14 @@ Policies can be optionally submitted with the contract. These policies are valid
 ```json
 {
   "contract": {
-    "resources": [...],
+    "resources": [
+      {
+        "name": "products",
+        "operations": ["get", "list"],
+        "fields": ["id", "name", "price", "stock"],
+        "filters": ["price > 100", "stock > 0"]
+      }
+    ],
     "policies": [
       {
         "name": "read_only_policy",
