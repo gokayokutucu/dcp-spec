@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContractMessage",
+  "type": "object",
+  "required": ["type", "protocol_version", "contract"],
+  "properties": {
+    "type": {
+      "const": "ContractMessage"
+    },
+    "protocol_version": {
+      "type": "string"
+    },
+    "dcp_profile": {
+      "type": "string",
+      "enum": ["lite"]
+    },
+    "contract": {
+      "$ref": "./contract.schema.json"
+    },
+    "contract_schema_ref": {
+      "type": "string",
+      "pattern": "^@([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)$"
+    }
+  },
+  "oneOf": [
+    { "required": ["contract"], "not": { "required": ["contract_schema_ref"] } },
+    { "required": ["contract_schema_ref"], "not": { "required": ["contract"] } }
+  ]
+}
