@@ -1667,6 +1667,131 @@ These schemas can be used to:
 - Support contract editing UIs with real-time validation.
 - Validate data in CI pipelines using tools like [`ajv`](https://ajv.js.org/) or [`jsonschema`](https://python-jsonschema.readthedocs.io/).
 
+
+---
+
+## ContractMessage Schema & Discoverability
+
+To ensure clients can validate and construct `ContractMessage` payloads programmatically, DCP provides a machine-readable schema and a standardized discovery endpoint.
+
+### JSON Schema Definition
+
+Clients should validate contracts against the official schema to ensure compatibility:
+
+```json
+"$schema": "https://raw.githubusercontent.com/gokayokutucu/dcp-spec/refs/heads/main/schemas/contract.schema.json"
+```
+
+> The full schema is available via `/dcp/.well-known/discovery`.
+
+#### Example ContractMessage Schema Snippet
+
+```json
+{
+  "title": "ContractMessage",
+  "type": "object",
+  "required": ["type", "protocol_version", "contract"],
+  "properties": {
+    "type": { "const": "ContractMessage" },
+    "protocol_version": { "type": "string" },
+    "contract": {
+      "$ref": "#/definitions/Contract"
+    }
+  },
+  "definitions": {
+    "Contract": {
+      "type": "object",
+      "required": ["resources", "response_formats"],
+      "properties": {
+        "resources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Resource" }
+        },
+        "response_formats": {
+          "type": "array",
+          "items": { "enum": ["json", "protobuf"] }
+        },
+        "region": { "type": "string" },
+        "storage_config": { "type": "object" }
+      }
+    },
+    "Resource": {
+      "type": "object",
+      "required": ["name", "operations", "fields"],
+      "properties": {
+        "name": { "type": "string" },
+        "operations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "filters": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+### Contract Discovery Endpoint
+
+The following endpoint exposes schema definitions and reusable policy examples:
+
+- **Endpoint**: `GET /dcp/.well-known/discovery`
+- **Response**:
+
+```json
+{
+  "schemas": {
+    "ContractMessage": "/schemas/contract.schema.json",
+    "DataRequest": "/schemas/data-request.schema.json"
+  },
+  "opa_examples": [
+    {
+      "name": "read_only",
+      "source": "package dcp.access\nallow {\n  input.method == \"GET\"\n}"
+    },
+    {
+      "name": "admin_crud",
+      "source": "package dcp.admin\nallow {\n  input.role == \"admin\"\n}"
+    }
+  ]
+}
+```
+
+This endpoint enables clients to bootstrap their contract payloads with confidence.
+
+---
+
+### Policy Submission in Contracts
+
+Policies can be optionally submitted with the contract. These policies are validated during contract processing:
+
+```json
+{
+  "contract": {
+    "resources": [...],
+    "policies": [
+      {
+        "name": "read_only_policy",
+        "source": "package dcp.read\n allow { input.method == \"GET\" }"
+      }
+    ]
+  }
+}
+```
+
+Policies are validated by the Policy Engine and must be scoped to the client namespace.
+
+---
+
 **Example validation in JavaScript:**
 ```javascript
 import Ajv from "ajv";
