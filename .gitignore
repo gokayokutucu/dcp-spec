@@ -20,7 +20,7 @@ venv/
 pip-log.txt
 
 # JetBrains IDEs (IntelliJ, PyCharm, etc.)
-/.idea/
+.idea/
 
 # VSCode
 /.vscode/
