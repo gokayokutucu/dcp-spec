@@ -1,6 +1,16 @@
 # Dynamic Contract Protocol (DCP)
 
-Dynamic Contract Protocol (DCP) enables clients to define API behavior dynamically through JSON or Protobuf contracts. Servers interpret these contracts to generate secure, validated, and isolated API layers on the fly. The protocol is built around flexibility, security, scalability, and verifiability.
+Dynamic Contract Protocol (DCP) is designed to transform how APIs are defined, consumed, and managed. Instead of relying on static documentation or manual onboarding, DCP enables dynamic, contract-driven API interactions that are secure, validated, and scalable. By using declarative contracts, clients specify exactly what data they need, and servers generate the necessary API behavior automatically. This approach simplifies integration across diverse systems and supports AI-driven API generation.
+
+---
+
+## 🎯 Goal
+
+DCP (Dynamic Contract Protocol) aims to eliminate the need for traditional static documentation tools like Swagger or manual API onboarding.  
+Instead, clients can interact with a single, dynamic endpoint using declarative contracts, specifying only the data they need.  
+The system generates validation, access control, and execution logic on the fly — enabling self-service data access across distributed systems.
+
+The ultimate goal is to simplify integration across domains, support AI-first dynamic API generation, and allow users to define and consume APIs with zero manual documentation.
 
 ---
 
@@ -16,9 +26,9 @@ Dynamic Contract Protocol (DCP) enables clients to define API behavior dynamical
 
 ---
 
-## 📦 Basic Usage
+## 📦 Usage Journey
 
-### 1. Inline `ContractMessage` Example
+### 1. ContractMessage (Request)
 ```json
 {
   "type": "ContractMessage",
@@ -37,7 +47,41 @@ Dynamic Contract Protocol (DCP) enables clients to define API behavior dynamical
 }
 ```
 
-### 2. `DataRequest` Example
+### 2. ContractAcknowledgement (Response)
+```json
+{
+  "type": "ContractAcknowledgement",
+  "status": "accepted",
+  "endpoints": {
+    "rest": "/dcp/client_123/products"
+  },
+  "expires_at": "2025-03-25T00:00:00Z",
+  "expires_in": 3600000,
+  "region": "EU",
+  "discovery_url": "/dcp/.well-known/discovery",
+  "data_request_schema": {
+    "type": "object",
+    "properties": {
+      "type": { "const": "DataRequest" },
+      "resource": { "type": "string" },
+      "operation": { "type": "string" },
+      "parameters": { "type": "object" }
+    },
+    "required": ["type", "resource", "operation"]
+  },
+  "data_response_schema": {
+    "type": "object",
+    "properties": {
+      "type": { "const": "DataResponse" },
+      "data": { "type": "array" },
+      "metadata": { "type": "object" }
+    },
+    "required": ["type", "data"]
+  }
+}
+```
+
+### 3. DataRequest (Request)
 ```json
 {
   "type": "DataRequest",
@@ -50,7 +94,7 @@ Dynamic Contract Protocol (DCP) enables clients to define API behavior dynamical
 }
 ```
 
-### 3. `DataResponse` Example
+### 4. DataResponse (Response)
 ```json
 {
   "type": "DataResponse",
@@ -66,6 +110,42 @@ Dynamic Contract Protocol (DCP) enables clients to define API behavior dynamical
 
 ---
 
+## 🧭 User Journey Diagram
+
+Below is the typical contract-driven interaction flow between client and server:
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant AuthService
+  participant DCP Gateway
+  participant AI Engine
+  participant Server
+
+  Client->>AuthService: Request JWT
+  AuthService-->>Client: Return JWT
+
+  Client->>DCP Gateway: Submit ContractMessage with JWT
+  DCP Gateway->>AI Engine: Validate & Generate API
+  AI Engine-->>DCP Gateway: Return ContractAcknowledgement
+
+  Client->>DCP Gateway: Send DataRequest
+  DCP Gateway->>Server: Fetch data
+  Server-->>DCP Gateway: Return filtered data
+  DCP Gateway-->>Client: Return DataResponse
+```
+
+The process works as follows:
+
+1. The client sends a **ContractMessage** describing the needed data resources.
+2. The server replies with a **ContractAcknowledgement** if the contract is valid and accepted.
+3. The client then sends a **DataRequest** using the contract-defined structure.
+4. The server responds with a **DataResponse** containing the requested data.
+
+This interaction ensures that data access is declarative, validated, and governed by secure and dynamic contracts.
+
+---
+
 ## 📚 Documentation
 
 | Topic | Description |
@@ -74,6 +154,7 @@ Dynamic Contract Protocol (DCP) enables clients to define API behavior dynamical
 | [Examples](./docs/examples) | Sample contracts and requests |
 | [Schemas](./schemas) | JSON Schema validators |
 | [Validator SDK](./tools/dcp-client-validator) | Client-side filter validator |
+| [HackMD Draft](https://hackmd.io/MQw2DfuuR_SfICvUc-4crg?view) | Living document of the current working spec |
 
 ---
 
