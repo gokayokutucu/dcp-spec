@@ -14,6 +14,11 @@ The ultimate goal is to simplify integration across domains, support AI-first dy
 
 ---
 
+## ❓ Why DCP?
+
+Modern API workflows rely on static specs like OpenAPI or Postman collections — but these struggle in dynamic, multi-tenant, or AI-driven environments.  
+DCP introduces a contract-first protocol that enables real-time negotiation between clients and servers, removing the need for manual onboarding, static schemas, and out-of-sync docs.
+
 ## ✨ Features
 
 - ✅ Dynamic API generation (REST, GraphQL, OData support)
