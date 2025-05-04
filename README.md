@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/favicons/apple-touch-icon.png" width="120" alt="DCP Logo" />
+  <img src="/docs/favicons/apple-touch-icon.png" width="120" alt="DCP Logo" />
 </p>
 
 # Dynamic Contract Protocol (DCP)
