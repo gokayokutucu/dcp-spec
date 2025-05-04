@@ -276,9 +276,11 @@ Policies are validated by the Policy Engine and must be scoped to the client nam
 | Topic | Description |
 |-------|-------------|
 | [Specification](./docs/dcp-spec-v1.0.md) | Full protocol definition |
+| [Why DCP Matters](./WHY_DCP_MATTERS.md) | Philosophy, motivation, and long-term vision |
 | [Examples](./docs/examples) | Sample contracts and requests |
 | [Schemas](./schemas) | JSON Schema validators |
 | [Validator SDK](./tools/dcp-client-validator) | Client-side filter validator |
+| [Roadmap](./ROADMAP.md) | Upcoming features, milestones, and vision |
 | [HackMD Draft](https://hackmd.io/MQw2DfuuR_SfICvUc-4crg?view) | Living document of the current working spec |
 
 ---
