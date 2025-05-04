@@ -27,6 +27,23 @@ DCP eliminates the need for static documentation like Swagger or Postman by enab
 3. Client sends a `DataRequest` using the agreed structure.
 4. Server replies with a `DataResponse` containing results.
 
+### Contract Flow Diagram
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant AuthService
+  participant DCP
+  Client->>AuthService: Get JWT
+  AuthService->>Client: Return token
+  Client->>DCP: Submit ContractMessage
+  DCP->>AuthService: Validate JWT
+  AuthService-->>DCP: OK
+  DCP->>Client: ContractAcknowledgement
+  Client->>DCP: Send DataRequest
+  DCP-->>Client: Return DataResponse
+```
+
 ### ContractMessage Example
 
 ```json
