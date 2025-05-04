@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="/dcp-spec/favicons/apple-touch-icon.png" width="120" alt="DCP Logo" />
+</p>
+
 # Dynamic Contract Protocol (DCP)
 
 Dynamic Contract Protocol (DCP) is designed to transform how APIs are defined, consumed, and managed. Instead of relying on static documentation or manual onboarding, DCP enables dynamic, contract-driven API interactions that are secure, validated, and scalable. By using declarative contracts, clients specify exactly what data they need, and servers generate the necessary API behavior automatically. This approach simplifies integration across diverse systems and supports AI-driven API generation.

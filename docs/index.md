@@ -4,6 +4,10 @@ title: Dynamic Contract Protocol (DCP)
 description: Contract-first, dynamic API protocol for AI-powered apps
 ---
 
+<p align="center">
+  <img src="https://gokayokutucu.github.io/dcp-spec/favicons/apple-touch-icon.png" alt="DCP Logo" width="120"/>
+</p>
+
 # Dynamic Contract Protocol (DCP)
 
 A contract-first, dynamic API protocol for AI-driven applications.
