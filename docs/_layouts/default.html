@@ -5,14 +5,13 @@
     <title>{{ page.title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">
-    {{ content | strip_newlines | markdownify }}
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
 </head>
 <body>
-<main class="container">
+<main class="container" style="max-width: 960px; margin: 2rem auto;">
     {{ content }}
 </main>
 </body>
