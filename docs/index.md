@@ -29,7 +29,7 @@ DCP eliminates the need for static documentation like Swagger or Postman by enab
 
 ### Contract Flow Diagram
 
-```mermaid
+<div class="mermaid">
 sequenceDiagram
   participant Client
   participant AuthService
@@ -42,7 +42,7 @@ sequenceDiagram
   DCP->>Client: ContractAcknowledgement
   Client->>DCP: Send DataRequest
   DCP-->>Client: Return DataResponse
-```
+</div>
 
 ### ContractMessage Example
 
